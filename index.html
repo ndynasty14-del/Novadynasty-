@@ -44,7 +44,7 @@
     <div class="max-w-6xl mx-auto flex items-center justify-between">
       <span class="font-cinzel text-lg font-black blue-shiny-text tracking-tight">NOVADYNASTY</span>
       <div class="flex items-center space-x-2">
-        <a href="https://discord.gg/QMz7adzXWq" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
+        <a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
         <button onclick="openBookingsModal()" class="bg-rose-900/50 border border-rose-700/60 text-rose-200 text-xs px-3 py-1.5 rounded-lg font-semibold">My Bookings</button>
         <div id="userPill" class="text-xs bg-rose-900 border border-rose-700 text-sky-300 px-2.5 py-1 rounded-lg font-mono"></div>
       </div>
@@ -64,7 +64,7 @@
   <div id="detailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
     <div class="bg-crimson-glass w-full max-w-lg rounded-2xl border border-sky-500/30 overflow-hidden shadow-2xl p-5 space-y-4">
       <div class="flex justify-between items-center"><h3 id="modalTitle" class="font-cinzel text-lg font-bold text-white"></h3><button onclick="closeModal('detailModal')" class="text-rose-400 text-xl font-bold">&times;</button></div>
-      <img id="modalImg" src="" class="w-full h-40 object-cover rounded-xl bg-black/50 p-2 border border-rose-900/50">
+      <img id="modalImg" src="" class="w-full h-40 object-contain rounded-xl bg-black/70 p-2 border border-rose-900/50">
       <div class="flex justify-between"><span id="modalCategory" class="text-xs uppercase font-bold text-sky-400"></span><span id="modalPrice" class="font-cinzel text-xl font-extrabold text-emerald-300"></span></div>
       <p id="modalDesc" class="text-xs text-rose-200"></p>
       <div id="modalPerks" class="bg-rose-950/60 p-3 rounded-xl text-xs text-sky-200 space-y-1 border border-rose-900/40"></div>
@@ -108,7 +108,7 @@
         </div>
       </div>
       <div class="flex space-x-2"><a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="w-1/2 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold text-center">Join Discord</a><button onclick="downloadReceiptPDF()" class="w-1/2 blue-btn py-2 rounded-xl text-xs font-bold">Download PDF</button></div>
-      <button onclick="closeModal('receiptModal')" class="w-full text-xs text-rose-400 py-1">Close</button>
+      <button onclick="closeModal('receiptModal')" class="w-full text-xs text-emerald-400 py-1">Close</button>
     </div>
   </div>
 
@@ -150,7 +150,7 @@
         <div class="bg-crimson-glass rounded-2xl p-4 border border-rose-900/60 flex flex-col justify-between" onclick="openDetailModal('${p.id}')">
           <div>
             <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${p.badgeBg}">${p.badge}</span><span class="text-xs text-sky-400 font-semibold">${p.category}</span></div>
-            <img src="${p.img}" class="h-32 w-full object-cover rounded-xl mb-2 bg-black/40 border border-rose-900/50">
+            <img src="${p.img}" class="h-32 w-full object-contain rounded-xl mb-2 bg-black/70 p-1.5 border border-rose-900/50">
             <h3 class="font-cinzel text-sm font-bold text-white">${p.name}</h3>
             <p class="text-[11px] text-rose-200/80 mb-2">${p.desc}</p>
           </div>
