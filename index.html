@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Novadynasty Minecraft Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0d0305; color: #e0f2fe; overflow-x: hidden; }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .bg-crimson-glass { background: rgba(26, 6, 12, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.2); }
+    .bg-moon-glass { background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(26, 6, 12, 0.9)); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .blue-shiny-text { background: linear-gradient(135deg, #bae6fd 0%, #38bdf8 50%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+    .blue-btn { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); color: #030712; font-weight: 700; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  
+  <!-- LOGIN GATEWAY -->
+  <div id="loginGateway" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="bg-crimson-glass w-full max-w-md rounded-2xl p-6 border border-rose-500/30 shadow-2xl relative">
+      <div class="text-center mb-6">
+        <h1 class="font-cinzel text-2xl font-black blue-shiny-text tracking-wide">NOVADYNASTY</h1>
+        <p class="text-xs text-sky-400 font-medium tracking-wide mt-1">MINECRAFT OFFICIAL MARKETPLACE</p>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-rose-300 font-bold uppercase tracking-wider mb-1">In-Game Username / Gamertag</label>
+          <input type="text" id="loginGamertag" required placeholder="e.g. Steve_Master" class="w-full bg-rose-950/60 border border-rose-900/80 rounded-xl px-4 py-3 text-sm text-sky-100 focus:outline-none focus:border-sky-400">
+        </div>
+        <div>
+          <label class="block text-xs text-rose-300 font-bold uppercase tracking-wider mb-1">Email Address</label>
+          <input type="email" id="loginEmail" required placeholder="yourname@gmail.com" class="w-full bg-rose-950/60 border border-rose-900/80 rounded-xl px-4 py-3 text-sm text-sky-100 focus:outline-none focus:border-sky-400">
+        </div>
+        <button type="submit" class="w-full blue-btn py-3.5 rounded-xl font-bold uppercase tracking-wider text-sm shadow-lg mt-2">Enter Marketplace &rarr;</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-rose-950/90 backdrop-blur-md border-b border-rose-900/40 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <span class="font-cinzel text-lg font-black blue-shiny-text tracking-tight">NOVADYNASTY</span>
+      <div class="flex items-center space-x-2">
+        <a href="https://discord.gg/QMz7adzXWq" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
+        <button onclick="openBookingsModal()" class="bg-rose-900/50 border border-rose-700/60 text-rose-200 text-xs px-3 py-1.5 rounded-lg font-semibold">My Bookings</button>
+        <div id="userPill" class="text-xs bg-rose-900 border border-rose-700 text-sky-300 px-2.5 py-1 rounded-lg font-mono"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+    <div class="bg-moon-glass rounded-2xl p-5 mb-8">
+      <h2 class="font-cinzel text-2xl font-extrabold text-white mb-2">Sovereign Ranks & Crate Keys</h2>
+      <p class="text-xs text-rose-200">Book Ranks with kits or obtain Crate Keys. Direct scan-to-pay via UPI.</p>
+    </div>
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </main>
+
+  <!-- DETAIL MODAL -->
+  <div id="detailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-crimson-glass w-full max-w-lg rounded-2xl border border-sky-500/30 overflow-hidden shadow-2xl p-5 space-y-4">
+      <div class="flex justify-between items-center"><h3 id="modalTitle" class="font-cinzel text-lg font-bold text-white"></h3><button onclick="closeModal('detailModal')" class="text-rose-400 text-xl font-bold">&times;</button></div>
+      <img id="modalImg" src="" class="w-full h-40 object-cover rounded-xl bg-black/50 p-2 border border-rose-900/50">
+      <div class="flex justify-between"><span id="modalCategory" class="text-xs uppercase font-bold text-sky-400"></span><span id="modalPrice" class="font-cinzel text-xl font-extrabold text-emerald-300"></span></div>
+      <p id="modalDesc" class="text-xs text-rose-200"></p>
+      <div id="modalPerks" class="bg-rose-950/60 p-3 rounded-xl text-xs text-sky-200 space-y-1 border border-rose-900/40"></div>
+      <div class="flex space-x-3"><button onclick="closeModal('detailModal')" class="w-1/3 py-2 rounded-xl border border-rose-700 text-xs text-rose-300">Close</button><button id="modalBuyBtn" class="w-2/3 blue-btn py-2 rounded-xl text-xs font-bold uppercase">Book Now with UPI &rarr;</button></div>
+    </div>
+  </div>
+
+  <!-- UPI PAYMENT MODAL -->
+  <div id="upiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+    <div class="bg-crimson-glass w-full max-w-md rounded-2xl border border-sky-500/30 p-5 space-y-4">
+      <div class="flex justify-between border-b border-rose-900 pb-2"><div><h3 class="font-cinzel text-base font-bold text-sky-400">Scan & Pay via UPI</h3><p class="text-[11px] text-rose-300">Complete payment to issue Unpaid Booking</p></div><button onclick="closeModal('upiModal')" class="text-rose-400 text-xl">&times;</button></div>
+      <div class="bg-rose-950/80 p-3 rounded-xl text-center space-y-2 border border-rose-900">
+        <div class="bg-white p-2 rounded-xl inline-block"><img id="upiQrImg" src="" class="w-40 h-40 object-contain mx-auto"></div>
+        <p class="text-xs text-rose-300">Account: <span class="text-white">SAI SOUMYAJIT BEHERA</span></p>
+        <p class="text-xs text-sky-400 font-mono font-bold">UPI ID: prabinaprusty4@oksbi</p>
+      </div>
+      <div class="space-y-2">
+        <div><label class="block text-[11px] text-rose-300 font-bold uppercase">Item</label><input type="text" id="upiItemName" readonly class="w-full bg-rose-950/80 border border-rose-900 rounded px-3 py-1.5 text-xs text-sky-300"></div>
+        <div><label class="block text-[11px] text-rose-300 font-bold uppercase">Amount</label><input type="text" id="upiAmount" readonly class="w-full bg-rose-950/80 border border-rose-900 rounded px-3 py-1.5 text-xs text-emerald-300 font-bold"></div>
+        <div><label class="block text-[11px] text-rose-300 font-bold uppercase">Your UPI Payer Name *</label><input type="text" id="upiPayerName" required placeholder="Name on your UPI app" class="w-full bg-rose-950/80 border border-sky-500/40 rounded px-3 py-1.5 text-xs text-white"></div>
+      </div>
+      <button onclick="confirmBooking()" class="w-full blue-btn py-2.5 rounded-xl font-bold text-xs uppercase">Confirm & Generate Receipt &rarr;</button>
+    </div>
+  </div>
+
+  <!-- RECEIPT MODAL -->
+  <div id="receiptModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="bg-crimson-glass w-full max-w-md rounded-2xl border border-sky-500/40 p-5 space-y-4">
+      <div id="receiptCard" class="bg-rose-950 p-4 rounded-xl border border-rose-800 space-y-2">
+        <div class="text-center border-b border-rose-900 pb-2"><h2 class="font-cinzel text-base font-black blue-shiny-text">NOVADYNASTY MARKETPLACE</h2><p class="text-[10px] text-sky-400 uppercase">Booking Order Slip</p></div>
+        <div class="flex justify-between items-center bg-sky-500/10 p-2 rounded"><span class="text-[11px] text-sky-300 font-bold">Status:</span><span class="text-[11px] bg-sky-500 text-gray-950 px-2 py-0.5 rounded font-extrabold">UNPAID - BOOKED</span></div>
+        <div class="space-y-1 text-xs text-rose-200">
+          <div class="flex justify-between"><span>ID:</span><span id="rcptId" class="font-mono"></span></div>
+          <div class="flex justify-between"><span>Date:</span><span id="rcptDate"></span></div>
+          <div class="flex justify-between"><span>GamerTag:</span><span id="rcptGamertag" class="text-white"></span></div>
+          <div class="flex justify-between"><span>Email:</span><span id="rcptEmail" class="text-white"></span></div>
+          <div class="flex justify-between"><span>UPI Name:</span><span id="rcptUpiName" class="text-sky-300"></span></div>
+          <hr class="border-rose-900 my-1">
+          <div class="flex justify-between font-bold"><span>Product:</span><span id="rcptProduct" class="text-sky-400"></span></div>
+          <div class="flex justify-between font-bold"><span>Price:</span><span id="rcptPrice" class="text-emerald-300 text-sm"></span></div>
+        </div>
+      </div>
+      <div class="flex space-x-2"><a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="w-1/2 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold text-center">Join Discord</a><button onclick="downloadReceiptPDF()" class="w-1/2 blue-btn py-2 rounded-xl text-xs font-bold">Download PDF</button></div>
+      <button onclick="closeModal('receiptModal')" class="w-full text-xs text-rose-400 py-1">Close</button>
+    </div>
+  </div>
+
+  <!-- HISTORY MODAL -->
+  <div id="historyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-crimson-glass w-full max-w-md rounded-2xl border border-rose-600/30 p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-rose-900 pb-2"><h3 class="font-cinzel text-base font-bold text-sky-400">My Saved Bookings</h3><button onclick="closeModal('historyModal')" class="text-rose-400 text-xl">&times;</button></div>
+      <div id="historyList" class="space-y-2 text-xs"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const UPI_ID = "prabinaprusty4@oksbi";
+    const ACCOUNT_NAME = "SAI SOUMYAJIT BEHERA";
+    const products = [
+      { id: "rank-titan", name: "Titan Rank (1 Month)", category: "Ranks + Kits", price: 129, badge: "TITAN", badgeBg: "bg-purple-900 border-purple-500 text-purple-200", img: "titan.jpg", desc: "Unlock Titan status for 30 days! Includes Titan Kit.", perks: ["Includes Titan Kit", "Titan Prefix"] },
+      { id: "rank-elite", name: "Elite Rank (1 Month)", category: "Ranks + Kits", price: 199, badge: "ELITE", badgeBg: "bg-red-900 border-red-500 text-red-200", img: "elite.jpg", desc: "Level up to Elite rank for 30 days! Comes equipped with Elite gear kit.", perks: ["Includes Elite Kit", "Lightning Elite Prefix"] },
+      { id: "rank-supreme", name: "Supreme Rank (1 Month)", category: "Ranks + Kits", price: 300, badge: "SUPREME", badgeBg: "bg-amber-600 border-amber-400 text-yellow-100", img: "supreme.jpg", desc: "The ultimate Sovereign tier with full perks & vault access.", perks: ["Includes Supreme Kit", "Supreme Trophy Prefix"] },
+      { id: "key-nova", name: "Nova Crate Key", category: "Crate Keys", price: 19, badge: "NOVA", badgeBg: "bg-emerald-900 border-emerald-400 text-emerald-200", img: "nova-key.jpg", desc: "Green Nova Crate Key to open Nova Crates.", perks: ["1x Nova Crate Key"] },
+      { id: "key-titan", name: "Titan Crate Key", category: "Crate Keys", price: 29, badge: "TITAN KEY", badgeBg: "bg-purple-950 border-purple-500 text-purple-300", img: "titan-key.jpg", desc: "Black and Purple Titan Crate Key.", perks: ["1x Titan Crate Key"] },
+      { id: "key-elite", name: "Elite Crate Key", category: "Crate Keys", price: 45, badge: "ELITE KEY", badgeBg: "bg-amber-100 border-amber-400 text-amber-900", img: "elite-key.jpg", desc: "White and Gold Elite Crate Key.", perks: ["1x Elite Crate Key"] },
+      { id: "key-supreme", name: "Supreme Crate Key", category: "Crate Keys", price: 69, badge: "SUPREME KEY", badgeBg: "bg-amber-950 border-yellow-500 text-yellow-400", img: "supreme-key.jpg", desc: "Black and Gold Supreme Crate Key.", perks: ["1x Supreme Crate Key"] }
+    ];
+    let currentUser = null, selectedProduct = null, userBookings = [];
+    window.onload = function() {
+      const savedUser = localStorage.getItem('nova_user');
+      if (savedUser) { currentUser = JSON.parse(savedUser); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPill').innerText = currentUser.gamertag; loadBookings(); }
+      renderProducts();
+    };
+    function handleLogin(e) {
+      e.preventDefault();
+      const gamertag = document.getElementById('loginGamertag').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
+      if (gamertag && email) { currentUser = { gamertag, email }; localStorage.setItem('nova_user', JSON.stringify(currentUser)); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPill').innerText = currentUser.gamertag; loadBookings(); }
+    }
+    function renderProducts() {
+      document.getElementById('productGrid').innerHTML = products.map(p => `
+        <div class="bg-crimson-glass rounded-2xl p-4 border border-rose-900/60 flex flex-col justify-between" onclick="openDetailModal('${p.id}')">
+          <div>
+            <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${p.badgeBg}">${p.badge}</span><span class="text-xs text-sky-400 font-semibold">${p.category}</span></div>
+            <img src="${p.img}" class="h-32 w-full object-cover rounded-xl mb-2 bg-black/40 border border-rose-900/50">
+            <h3 class="font-cinzel text-sm font-bold text-white">${p.name}</h3>
+            <p class="text-[11px] text-rose-200/80 mb-2">${p.desc}</p>
+          </div>
+          <div class="flex items-center justify-between border-t border-rose-900/60 pt-2"><span class="font-cinzel text-lg font-extrabold text-emerald-300">₹${p.price}</span><button onclick="event.stopPropagation(); openUpiModal('${p.id}')" class="blue-btn text-xs font-bold px-3 py-1.5 rounded-lg">Buy Now</button></div>
+        </div>
+      `).join('');
+    }
+    function openDetailModal(id) {
+      selectedProduct = products.find(p => p.id === id);
+      document.getElementById('modalTitle').innerText = selectedProduct.name;
+      document.getElementById('modalImg').src = selectedProduct.img;
+      document.getElementById('modalCategory').innerText = selectedProduct.category;
+      document.getElementById('modalPrice').innerText = '₹' + selectedProduct.price;
+      document.getElementById('modalDesc').innerText = selectedProduct.desc;
+      document.getElementById('modalPerks').innerHTML = selectedProduct.perks.map(perk => `<div>• ${perk}</div>`).join('');
+      document.getElementById('modalBuyBtn').onclick = function() { closeModal('detailModal'); openUpiModal(id); };
+      document.getElementById('detailModal').classList.remove('hidden');
+    }
+    function openUpiModal(id) {
+      selectedProduct = products.find(p => p.id === id);
+      document.getElementById('upiItemName').value = selectedProduct.name;
+      document.getElementById('upiAmount').value = '₹' + selectedProduct.price;
+      const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(ACCOUNT_NAME)}&am=${selectedProduct.price}&cu=INR`;
+      document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      document.getElementById('upiModal').classList.remove('hidden');
+    }
+    function confirmBooking() {
+      const payerName = document.getElementById('upiPayerName').value.trim();
+      if (!payerName) { alert("Please enter your UPI Payer Name!"); return; }
+      const booking = { id: 'ND-' + Math.floor(100000 + Math.random() * 900000), date: new Date().toLocaleString(), gamertag: currentUser.gamertag, email: currentUser.email, upiName: payerName, product: selectedProduct.name, price: selectedProduct.price, status: "UNPAID - BOOKED" };
+      userBookings.unshift(booking);
+      localStorage.setItem('nova_bookings_' + currentUser.email, JSON.stringify(userBookings));
+      document.getElementById('rcptId').innerText = booking.id;
+      document.getElementById('rcptDate').innerText = booking.date;
+      document.getElementById('rcptGamertag').innerText = booking.gamertag;
+      document.getElementById('rcptEmail').innerText = booking.email;
+      document.getElementById('rcptUpiName').innerText = booking.upiName;
+      document.getElementById('rcptProduct').innerText = booking.product;
+      document.getElementById('rcptPrice').innerText = '₹' + booking.price;
+      closeModal('upiModal');
+      document.getElementById('receiptModal').classList.remove('hidden');
+    }
+    function loadBookings() { const saved = localStorage.getItem('nova_bookings_' + currentUser.email); userBookings = saved ? JSON.parse(saved) : []; }
+    function openBookingsModal() {
+      const list = document.getElementById('historyList');
+      list.innerHTML = userBookings.length === 0 ? `<div class="text-rose-300 text-center py-4">No bookings yet.</div>` : userBookings.map(b => `<div class="bg-rose-950 p-2 rounded border border-rose-900 flex justify-between"><div><div class="font-bold text-sky-300">${b.product}</div><div class="text-[10px] text-rose-300">${b.date}</div></div><div class="text-right"><div class="text-emerald-300 font-bold">₹${b.price}</div><div class="text-[9px] bg-sky-500 text-gray-950 px-1 rounded font-bold">${b.status}</div></div></div>`).join('');
+      document.getElementById('historyModal').classList.remove('hidden');
+    }
+    function downloadReceiptPDF() { html2pdf().from(document.getElementById('receiptCard')).save('Novadynasty_Receipt.pdf'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+  </script>
+</body>
+</html>
