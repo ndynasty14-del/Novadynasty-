@@ -44,9 +44,12 @@
     <div class="max-w-6xl mx-auto flex items-center justify-between">
       <span class="font-cinzel text-lg font-black blue-shiny-text tracking-tight">NOVADYNASTY</span>
       <div class="flex items-center space-x-2">
-        <a href="https://discord.gg/XyTdcYkUTR" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
+        <a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
         <button onclick="openBookingsModal()" class="bg-rose-900/50 border border-rose-700/60 text-rose-200 text-xs px-3 py-1.5 rounded-lg font-semibold">My Bookings</button>
-        <div id="userPill" class="text-xs bg-rose-900 border border-rose-700 text-sky-300 px-2.5 py-1 rounded-lg font-mono"></div>
+        <div class="flex items-center bg-rose-900 border border-rose-700 rounded-lg overflow-hidden">
+          <span id="userPill" class="text-xs text-sky-300 px-2.5 py-1 font-mono"></span>
+          <button onclick="logoutUser()" title="Switch Username" class="bg-rose-800/80 hover:bg-rose-700 text-rose-200 px-2 py-1 text-xs border-l border-rose-700/80 font-bold">✎</button>
+        </div>
       </div>
     </div>
   </header>
@@ -107,7 +110,7 @@
           <div class="flex justify-between font-bold"><span>Price:</span><span id="rcptPrice" class="text-emerald-300 text-sm"></span></div>
         </div>
       </div>
-      <div class="flex space-x-2"><a href="https://discord.gg/XyTdcYkUTR" target="_blank" class="w-1/2 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold text-center">Join Discord</a><button onclick="downloadReceiptPDF()" class="w-1/2 blue-btn py-2 rounded-xl text-xs font-bold">Download PDF</button></div>
+      <div class="flex space-x-2"><a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="w-1/2 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold text-center">Join Discord</a><button onclick="downloadReceiptPDF()" class="w-1/2 blue-btn py-2 rounded-xl text-xs font-bold">Download PDF</button></div>
       <button onclick="closeModal('receiptModal')" class="w-full text-xs text-emerald-400 py-1">Close</button>
     </div>
   </div>
@@ -144,6 +147,13 @@
       const gamertag = document.getElementById('loginGamertag').value.trim();
       const email = document.getElementById('loginEmail').value.trim();
       if (gamertag && email) { currentUser = { gamertag, email }; localStorage.setItem('nova_user', JSON.stringify(currentUser)); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPill').innerText = currentUser.gamertag; loadBookings(); }
+    }
+    function logoutUser() {
+      localStorage.removeItem('nova_user');
+      currentUser = null;
+      document.getElementById('loginGamertag').value = '';
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginGateway').classList.remove('hidden');
     }
     function renderProducts() {
       document.getElementById('productGrid').innerHTML = products.map(p => `
