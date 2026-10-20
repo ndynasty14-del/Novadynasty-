@@ -22,7 +22,10 @@
   <div id="loginGateway" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="bg-crimson-glass w-full max-w-md rounded-2xl p-6 border border-rose-500/30 shadow-2xl relative">
       <div class="text-center mb-6">
-        <h1 class="font-cinzel text-2xl font-black blue-shiny-text tracking-wide">NOVADYNASTY</h1>
+        <div class="flex items-baseline justify-center space-x-2">
+          <h1 class="font-cinzel text-2xl font-black blue-shiny-text tracking-wide">NOVADYNASTY</h1>
+          <span class="text-[10px] text-rose-300/80 italic font-medium">by Robert Downey Jr.</span>
+        </div>
         <p class="text-xs text-sky-400 font-medium tracking-wide mt-1">MINECRAFT OFFICIAL MARKETPLACE</p>
       </div>
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
@@ -42,7 +45,10 @@
   <!-- HEADER -->
   <header class="sticky top-0 z-40 bg-rose-950/90 backdrop-blur-md border-b border-rose-900/40 px-4 py-3">
     <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <span class="font-cinzel text-lg font-black blue-shiny-text tracking-tight">NOVADYNASTY</span>
+      <div class="flex items-baseline space-x-2">
+        <span class="font-cinzel text-lg font-black blue-shiny-text tracking-tight">NOVADYNASTY</span>
+        <span class="text-[10px] text-rose-300/80 italic font-medium tracking-normal">by Robert Downey Jr.</span>
+      </div>
       <div class="flex items-center space-x-2">
         <a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
         <button onclick="openBookingsModal()" class="bg-rose-900/50 border border-rose-700/60 text-rose-200 text-xs px-3 py-1.5 rounded-lg font-semibold">My Bookings</button>
@@ -97,7 +103,13 @@
   <div id="receiptModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="bg-crimson-glass w-full max-w-md rounded-2xl border border-sky-500/40 p-5 space-y-4">
       <div id="receiptCard" class="bg-rose-950 p-4 rounded-xl border border-rose-800 space-y-2">
-        <div class="text-center border-b border-rose-900 pb-2"><h2 class="font-cinzel text-base font-black blue-shiny-text">NOVADYNASTY MARKETPLACE</h2><p class="text-[10px] text-sky-400 uppercase">Booking Order Slip</p></div>
+        <div class="text-center border-b border-rose-900 pb-2">
+          <div class="flex items-baseline justify-center space-x-1.5">
+            <h2 class="font-cinzel text-base font-black blue-shiny-text">NOVADYNASTY</h2>
+            <span class="text-[9px] text-rose-300/80 italic font-medium">by Robert Downey Jr.</span>
+          </div>
+          <p class="text-[10px] text-sky-400 uppercase">Booking Order Slip</p>
+        </div>
         <div class="flex justify-between items-center bg-sky-500/10 p-2 rounded"><span class="text-[11px] text-sky-300 font-bold">Status:</span><span class="text-[11px] bg-sky-500 text-gray-950 px-2 py-0.5 rounded font-extrabold">UNPAID - BOOKED</span></div>
         <div class="space-y-1 text-xs text-rose-200">
           <div class="flex justify-between"><span>ID:</span><span id="rcptId" class="font-mono"></span></div>
