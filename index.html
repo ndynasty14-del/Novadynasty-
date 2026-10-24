@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Novadynasty Minecraft Marketplace</title>
+  
+  <!-- FAVICON / LOGO FOR GOOGLE & BROWSER TABS -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="favicon.ico">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -53,7 +59,9 @@
         <a href="https://discord.com/channels/1556325720618172456/1560194088308056064" target="_blank" class="bg-indigo-600/40 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg font-semibold">Discord</a>
         <button onclick="openBookingsModal()" class="bg-rose-900/50 border border-rose-700/60 text-rose-200 text-xs px-3 py-1.5 rounded-lg font-semibold">My Bookings</button>
         <div class="flex items-center bg-rose-900 border border-rose-700 rounded-lg overflow-hidden">
-          <span id="userPill" class="text-xs text-sky-300 px-2.5 py-1 font-mono"></span>
+          <button onclick="openProfileModal()" id="userPill" class="text-xs text-sky-300 px-2.5 py-1 font-mono hover:bg-rose-800/60 flex items-center space-x-1">
+            <span>👤</span><span id="userPillText"></span>
+          </button>
           <button onclick="logoutUser()" title="Switch Username" class="bg-rose-800/80 hover:bg-rose-700 text-rose-200 px-2 py-1 text-xs border-l border-rose-700/80 font-bold">✎</button>
         </div>
       </div>
@@ -62,12 +70,64 @@
 
   <!-- MAIN CONTENT -->
   <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
-    <div class="bg-moon-glass rounded-2xl p-5 mb-8">
-      <h2 class="font-cinzel text-2xl font-extrabold text-white mb-2">Sovereign Ranks & Crate Keys</h2>
-      <p class="text-xs text-rose-200">Book Ranks with kits or obtain Crate Keys. Direct scan-to-pay via UPI.</p>
+    <div class="bg-moon-glass rounded-2xl p-5 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-cinzel text-2xl font-extrabold text-white mb-1">Sovereign Ranks & Crate Keys</h2>
+          <p class="text-xs text-rose-200">Book Ranks with kits or obtain Crate Keys. Direct scan-to-pay via UPI.</p>
+        </div>
+        <!-- SERVER IP BANNER (Replace YOUR IP below with your server IP) -->
+        <div class="bg-rose-950/80 border border-sky-500/30 p-3 rounded-xl flex items-center justify-between space-x-3">
+          <div>
+            <span class="text-[10px] text-sky-400 font-bold uppercase block tracking-wider">Server Address</span>
+            <span id="serverIpText" class="font-mono text-xs font-bold text-white">heaven.caspian.host:30222</span>
+          </div>
+          <button onclick="copyServerIp()" id="copyIpBtn" class="bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/40 text-sky-300 text-xs font-bold px-3 py-1.5 rounded-lg">Copy IP</button>
+        </div>
+      </div>
     </div>
+
+    <!-- NOTICE / DISCLAIMER NOTE -->
+    <div class="bg-rose-950/50 border border-rose-900/80 rounded-xl p-3 mb-8 text-center text-xs text-rose-200/90">
+      <span class="font-bold text-sky-300 uppercase tracking-wide"> Important Notice:</span>
+      We only sell virtual ranks, crate keys, and perks for use strictly on our official <strong>Novadynasty Minecraft Server</strong>. We do not sell the official Minecraft game or Mojang accounts.
+    </div>
+
     <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </main>
+
+  <!-- PROFILE MODAL -->
+  <div id="profileModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-crimson-glass w-full max-w-md rounded-2xl border border-sky-500/30 p-5 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-rose-900 pb-2">
+        <h3 class="font-cinzel text-base font-bold text-sky-400">Player Profile</h3>
+        <button onclick="closeModal('profileModal')" class="text-rose-400 text-xl font-bold">&times;</button>
+      </div>
+      <div class="bg-rose-950/80 p-4 rounded-xl border border-rose-900/60 space-y-3">
+        <div class="flex items-center space-x-3 border-b border-rose-900/60 pb-3">
+          <div class="w-12 h-12 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-xl">🎮</div>
+          <div>
+            <h4 id="profileGamertag" class="text-sm font-bold text-white font-mono"></h4>
+            <p id="profileEmail" class="text-[11px] text-rose-300/80"></p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+          <div class="bg-rose-900/40 p-2 rounded-lg border border-rose-800/50">
+            <span class="text-[10px] text-rose-300 block font-bold uppercase">Total Bookings</span>
+            <span id="profileTotalBookings" class="text-sm font-extrabold text-emerald-300">0</span>
+          </div>
+          <div class="bg-rose-900/40 p-2 rounded-lg border border-rose-800/50">
+            <span class="text-[10px] text-rose-300 block font-bold uppercase">Status</span>
+            <span class="text-xs font-extrabold text-sky-300">Active Player</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex space-x-2">
+        <button onclick="closeModal('profileModal'); openBookingsModal();" class="w-1/2 bg-rose-900/60 border border-rose-700 text-xs text-rose-200 py-2 rounded-xl font-semibold">View Bookings</button>
+        <button onclick="closeModal('profileModal'); logoutUser();" class="w-1/2 blue-btn py-2 rounded-xl text-xs font-bold">Switch Account</button>
+      </div>
+    </div>
+  </div>
 
   <!-- DETAIL MODAL -->
   <div id="detailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
@@ -151,14 +211,22 @@
     let currentUser = null, selectedProduct = null, userBookings = [];
     window.onload = function() {
       const savedUser = localStorage.getItem('nova_user');
-      if (savedUser) { currentUser = JSON.parse(savedUser); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPill').innerText = currentUser.gamertag; loadBookings(); }
+      if (savedUser) { currentUser = JSON.parse(savedUser); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPillText').innerText = currentUser.gamertag; loadBookings(); }
       renderProducts();
     };
+    function copyServerIp() {
+      const ipText = document.getElementById('serverIpText').innerText;
+      navigator.clipboard.writeText(ipText).then(() => {
+        const btn = document.getElementById('copyIpBtn');
+        btn.innerText = 'Copied!';
+        setTimeout(() => btn.innerText = 'Copy IP', 2000);
+      });
+    }
     function handleLogin(e) {
       e.preventDefault();
       const gamertag = document.getElementById('loginGamertag').value.trim();
       const email = document.getElementById('loginEmail').value.trim();
-      if (gamertag && email) { currentUser = { gamertag, email }; localStorage.setItem('nova_user', JSON.stringify(currentUser)); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPill').innerText = currentUser.gamertag; loadBookings(); }
+      if (gamertag && email) { currentUser = { gamertag, email }; localStorage.setItem('nova_user', JSON.stringify(currentUser)); document.getElementById('loginGateway').classList.add('hidden'); document.getElementById('userPillText').innerText = currentUser.gamertag; loadBookings(); }
     }
     function logoutUser() {
       localStorage.removeItem('nova_user');
@@ -166,6 +234,13 @@
       document.getElementById('loginGamertag').value = '';
       document.getElementById('loginEmail').value = '';
       document.getElementById('loginGateway').classList.remove('hidden');
+    }
+    function openProfileModal() {
+      if (!currentUser) return;
+      document.getElementById('profileGamertag').innerText = currentUser.gamertag;
+      document.getElementById('profileEmail').innerText = currentUser.email;
+      document.getElementById('profileTotalBookings').innerText = userBookings.length;
+      document.getElementById('profileModal').classList.remove('hidden');
     }
     function renderProducts() {
       document.getElementById('productGrid').innerHTML = products.map(p => `
